@@ -36,7 +36,7 @@ function App() {
      * Then when we wrap our main component, all components will have access
     */
    
-    <PostProvider>
+   
     <section>
       <button
         onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
@@ -44,13 +44,16 @@ function App() {
       >
         {isFakeDark ? "☀️" : "🌙"}
       </button>
-
+      {/* Note how we are wrapping the prover around the components that need the global state and functions */}
+      <PostProvider>
       <Header/>
       <Main/>
       <Archive />
       <Footer />
+      </PostProvider>
+
     </section>
-    </PostProvider>
+   
   );
 }
 
