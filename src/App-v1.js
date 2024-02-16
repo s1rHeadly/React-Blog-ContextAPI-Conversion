@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
-import { PostContext, PostProvider } from "./PostContext";
 
 function createRandomPost() {
   return {
@@ -11,11 +10,36 @@ function createRandomPost() {
 
 
 
+ // 1. Create the context (starts with uppercase as its also a component!)
+ const PostContext = createContext();
+
+
 
 function App() {
+
+
+  const [posts, setPosts] = useState(() =>
+    Array.from({ length: 30 }, () => createRandomPost())
+  );
+  const [searchQuery, setSearchQuery] = useState("");
   const [isFakeDark, setIsFakeDark] = useState(false);
 
+  // Derived state. These are the posts that will actually be displayed
+  const searchedPosts = searchQuery.length > 0 ? posts.filter((post) => `${post.title} ${post.body}`.toLowerCase().includes(searchQuery.toLowerCase())) : posts;
 
+
+   
+    
+
+  function handleAddPost(post) {
+    setPosts((posts) => (
+      [...posts, post]
+    ))
+  }
+
+  function handleClearPosts() {
+    setPosts([]);
+  }
 
   // Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
   useEffect(
@@ -35,8 +59,16 @@ function App() {
      * we need Provide value to the child components by adding .Provider
      * Then when we wrap our main component, all components will have access
     */
-   
-    <PostProvider>
+    <PostContext.Provider value={{
+      posts: searchedPosts, // the derived state that holds the posts
+      query: searchQuery, // the query
+      querySetter: setSearchQuery, // query setter function
+      addPostHandler: handleAddPost, // add post function
+      clearPostHander: handleClearPosts, // clear posts function
+
+
+    }}>
+
     <section>
       <button
         onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
@@ -50,7 +82,7 @@ function App() {
       <Archive />
       <Footer />
     </section>
-    </PostProvider>
+    </PostContext.Provider>
   );
 }
 
@@ -64,7 +96,9 @@ function Header() {
         <span>⚛️</span>The Atomic Blog
       </h1>
       <div>
-        <Results/>
+        <Results
+        // posts={posts}
+        />
         <SearchPosts />
         <button onClick={clearPostHander}>Clear posts</button>
       </div>
