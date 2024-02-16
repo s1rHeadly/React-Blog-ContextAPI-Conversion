@@ -79,7 +79,7 @@ function App() {
 
       <Header/>
       <Main/>
-      <Archive onAddPost={handleAddPost} />
+      <Archive />
       <Footer />
     </section>
     </PostContext.Provider>
