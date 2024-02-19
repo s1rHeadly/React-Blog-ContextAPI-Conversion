@@ -2,10 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./style.css";
 import App from "./App";
+import AppMemo from './AppMemo'
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+<AppMemo />
   </React.StrictMode>
 );
